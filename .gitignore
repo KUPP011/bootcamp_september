@@ -21,6 +21,8 @@ output.xml
 log.html
 report.html
 ipynb_checkpoints/
+screenshots/
+*.png
 venv/
 *.pyc
 __pycache__/

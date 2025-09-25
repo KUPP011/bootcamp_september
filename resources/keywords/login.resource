@@ -1,6 +1,13 @@
 *** Settings ***
 Library    Browser
+Library    DateTime
 Resource    ../variables/common.resource
+
+*** Keywords ***
+Take Screenshot With Timestamp
+    [Arguments]    ${name}
+    ${timestamp}=    Get Current Date    result_format=%Y%m%d_%H%M%S
+    Take Screenshot    ${SCREENSHOT_DIR}${/}${name}_${timestamp}.png
 
 *** Keywords ***
 Open Browser To Login Page
