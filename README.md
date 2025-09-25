@@ -53,6 +53,23 @@ robot -t "Valid Login" tests/login.robot
 robot --variable BROWSER:firefox --variable HEADLESS:True tests/login.robot
 ```
 
+### Run boundary value tests only:
+```powershell
+robot --include boundary-value tests/login.robot
+```
+
+### Run security tests only:
+```powershell
+robot --include security tests/login.robot
+```
+
+### Run specific test types:
+```powershell
+robot --include sql-injection tests/login.robot
+robot --include xss tests/login.robot
+robot --include special-chars tests/login.robot
+```
+
 ## Test Cases
 
 ### Positive Tests
@@ -64,6 +81,16 @@ robot --variable BROWSER:firefox --variable HEADLESS:True tests/login.robot
 - Empty Username: Tests login with empty username field
 - Empty Password: Tests login with empty password field
 
+### Boundary Value Tests
+- Very Long Username: Tests with extremely long username (1000+ characters)
+- Very Long Password: Tests with extremely long password (1000+ characters)
+- Special Characters Username: Tests with special characters in username
+- Special Characters Password: Tests with unicode and special characters in password
+- SQL Injection Username Test: Tests SQL injection attempts in username field
+- SQL Injection Password Test: Tests SQL injection attempts in password field
+- XSS Username Test: Tests XSS (Cross-Site Scripting) attempts in username field
+- XSS Password Test: Tests XSS attempts in password field
+
 ## Page Object Model Implementation
 
 ### Keywords (resources/keywords/login.resource)
@@ -72,11 +99,61 @@ robot --variable BROWSER:firefox --variable HEADLESS:True tests/login.robot
 - Submit Login Form
 - Verify Successful Login
 - Verify Error Message
+- Take Screenshot With Timestamp (NEW)
 
 ### Variables (resources/variables/common.resource)
 - Browser configuration
 - Test data
 - Page locators
+
+## Screenshot Functionality
+
+The framework now includes automatic screenshot capture capabilities:
+
+### Features
+- **Automatic Screenshots**: Screenshots are taken before and after important actions (input username, input password, submit form)
+- **Timestamp Naming**: All screenshots include timestamps in format `YYYYMMDD_HHMMSS`
+- **Organized Storage**: Screenshots are saved in the `screenshots/` directory
+- **Manual Screenshots**: Use the `Take Screenshot With Timestamp` keyword for custom screenshots
+
+### Screenshot Naming Convention
+- `before_input_username_YYYYMMDD_HHMMSS.png`
+- `after_input_username_YYYYMMDD_HHMMSS.png`
+- `before_input_password_YYYYMMDD_HHMMSS.png`
+- `after_input_password_YYYYMMDD_HHMMSS.png`
+- `before_submit_login_YYYYMMDD_HHMMSS.png`
+- `after_submit_login_YYYYMMDD_HHMMSS.png`
+
+### Manual Screenshot Usage
+```robotframework
+Take Screenshot With Timestamp    custom_description
+```
+
+**Note:** Screenshots are automatically excluded from version control via `.gitignore`
+
+## Test Organization and Tags
+
+Tests are organized using tags for easy filtering and execution:
+
+### Available Tags
+- `boundary-value`: All boundary value tests
+- `security`: Security-related tests (SQL injection, XSS, very long inputs)
+- `special-chars`: Tests with special characters
+- `sql-injection`: SQL injection specific tests
+- `xss`: Cross-Site Scripting specific tests
+
+### Running Tests by Tag Examples
+```powershell
+# Run all boundary value tests
+robot --include boundary-value tests/login.robot
+
+# Run all security tests
+robot --include security tests/login.robot
+
+# Run specific security test types
+robot --include sql-injection tests/login.robot
+robot --include xss tests/login.robot
+```
 
 ## Best Practices
 
